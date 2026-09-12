@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#123b68">
+  <title>Ficha de Cadastro</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="card" id="form-card">
+      <header class="brand">
+        <div class="brand-mark">V</div>
+        <div>
+          <p class="eyebrow">Cadastro central</p>
+          <h1>Ficha de Cadastro</h1>
+        </div>
+      </header>
+
+      <div class="referrer-box">
+        <span>Indicado por</span>
+        <strong id="referrer-name">Vanda Silva</strong>
+      </div>
+
+      <p class="intro">Preencha com atenção. Ao final, o WhatsApp abrirá diretamente na conversa da Vanda.</p>
+
+      <form id="registration-form" novalidate>
+        <label>Nome completo
+          <input id="nome" name="nome" autocomplete="name" maxlength="100" required>
+        </label>
+
+        <div class="two-columns">
+          <label>Nº do título
+            <input id="titulo" name="titulo" inputmode="numeric" maxlength="16" required>
+          </label>
+          <label>Data de nascimento
+            <input id="nascimento" name="nascimento" type="date" required>
+          </label>
+        </div>
+
+        <div class="two-columns narrow">
+          <label>Zona
+            <input id="zona" name="zona" inputmode="numeric" maxlength="6" required>
+          </label>
+          <label>Seção
+            <input id="secao" name="secao" inputmode="numeric" maxlength="6" required>
+          </label>
+        </div>
+
+        <label>Endereço completo
+          <textarea id="endereco" name="endereco" rows="3" maxlength="200" required></textarea>
+        </label>
+
+        <div class="two-columns">
+          <label>CPF
+            <input id="cpf" name="cpf" inputmode="numeric" maxlength="14" placeholder="000.000.000-00" required>
+          </label>
+          <label>Celular com DDD
+            <input id="celular" name="celular" type="tel" inputmode="tel" maxlength="16" placeholder="(85) 90000-0000" required>
+          </label>
+        </div>
+
+        <label class="consent">
+          <input id="consentimento" name="consentimento" type="checkbox" required>
+          <span>Autorizo o uso destes dados para cadastro, contato e relatório interno.</span>
+        </label>
+
+        <div id="form-error" class="error" role="alert" hidden></div>
+        <button class="primary-button" type="submit">CONTINUAR</button>
+      </form>
+    </section>
+
+    <section class="card result-card" id="result-card" hidden>
+      <div class="success-icon">✓</div>
+      <h2>Ficha preparada</h2>
+      <p>Agora siga os dois passos abaixo.</p>
+
+      <div class="step-box">
+        <span class="step-number">1</span>
+        <div>
+          <strong>Enviar o cadastro para Vanda</strong>
+          <p>O WhatsApp abrirá diretamente no número central. Basta tocar em enviar.</p>
+        </div>
+      </div>
+      <button id="send-whatsapp" class="primary-button whatsapp-button">ENVIAR PARA VANDA</button>
+
+      <div class="step-box second-step">
+        <span class="step-number">2</span>
+        <div>
+          <strong>Compartilhar seu link</strong>
+          <p>Quem preencher pelo seu link ficará marcado como indicado por você.</p>
+        </div>
+      </div>
+      <button id="share-referral" class="secondary-button">COMPARTILHAR MEU LINK</button>
+      <button id="download-image" class="text-button">Baixar ficha em imagem</button>
+      <button id="edit-form" class="text-button">Voltar e corrigir</button>
+    </section>
+  </main>
+
+  <canvas id="card-canvas" width="1080" height="1350" hidden></canvas>
+  <script src="app.js"></script>
+</body>
+</html>
