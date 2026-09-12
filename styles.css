@@ -59,17 +59,29 @@ h1 { font-size: clamp(25px, 6vw, 34px); }
 h2 { font-size: 27px; text-align: center; }
 
 .referrer-box {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 7px 14px;
   margin: 22px 0 12px;
   padding: 14px 16px;
   border-radius: 13px;
   background: var(--light-blue);
   border: 1px solid #cfe1f1;
 }
-.referrer-box span { color: var(--muted); }
-.referrer-box strong { color: var(--blue); text-align: right; }
+.referrer-box span { color: var(--muted); font-weight: 700; }
+.referrer-box input {
+  min-height: 42px;
+  border-color: #a9c7e1;
+  color: var(--blue);
+  font-weight: 700;
+}
+.referrer-box small {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+}
 .intro { margin: 0 0 20px; color: var(--muted); line-height: 1.45; }
 
 form { display: grid; gap: 16px; }
@@ -146,6 +158,5 @@ button { border: 0; border-radius: 12px; min-height: 50px; padding: 12px 17px; f
   .card { padding: 18px 15px; border-radius: 17px; }
   .two-columns { grid-template-columns: 1fr; }
   .two-columns.narrow { grid-template-columns: 1fr 1fr; }
-  .referrer-box { flex-direction: column; gap: 4px; }
-  .referrer-box strong { text-align: left; }
+  .referrer-box { grid-template-columns: 1fr; }
 }

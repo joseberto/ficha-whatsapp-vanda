@@ -4,13 +4,14 @@
   const CENTRAL_PHONE = "5585920013309";
   const DEFAULT_REFERRER = "Vanda Silva";
   const params = new URLSearchParams(window.location.search);
-  const referrer = cleanName(params.get("indicado_por")) || DEFAULT_REFERRER;
+  const initialReferrer = cleanName(params.get("indicado_por")) || DEFAULT_REFERRER;
 
   const form = document.getElementById("registration-form");
   const formCard = document.getElementById("form-card");
   const resultCard = document.getElementById("result-card");
   const errorBox = document.getElementById("form-error");
-  document.getElementById("referrer-name").textContent = referrer;
+  const referrerInput = document.getElementById("referrer-name");
+  referrerInput.value = initialReferrer;
 
   let registration = null;
 
@@ -74,7 +75,7 @@
       `*Nascimento:* ${dateBR(data.nascimento)}`,
       `*CPF:* ${formatCPF(data.cpf)}`,
       `*Celular:* ${formatPhone(data.celular)}`,
-      `*Indicado por:* ${referrer}`,
+      `*Indicado por:* ${data.indicadoPor}`,
       "",
       "Autorização para cadastro, contato e relatório interno: SIM",
     ].join("\n");
@@ -88,6 +89,7 @@
 
   function collect() {
     const data = Object.fromEntries(new FormData(form).entries());
+    data.indicadoPor = cleanName(referrerInput.value);
     data.nome = cleanName(data.nome);
     data.titulo = onlyDigits(data.titulo);
     data.zona = onlyDigits(data.zona);
@@ -99,6 +101,7 @@
   }
 
   function validate(data) {
+    if (!data.indicadoPor) return "Digite o nome de quem indicou você.";
     if (!data.nome || !data.titulo || !data.zona || !data.secao || !data.endereco || !data.nascimento || !data.cpf || !data.celular) return "Preencha todos os campos da ficha.";
     if (data.nome.split(" ").length < 2) return "Digite o nome completo.";
     if (!validCPF(data.cpf)) return "Confira o CPF. Ele parece estar incorreto.";
@@ -168,7 +171,7 @@
     ctx.textAlign = "left";
 
     const fields = [
-      ["INDICADO POR", referrer], ["NOME COMPLETO", data.nome],
+      ["INDICADO POR", data.indicadoPor], ["NOME COMPLETO", data.nome],
       ["Nº DO TÍTULO", data.titulo], ["ZONA / SEÇÃO", `${data.zona} / ${data.secao}`],
       ["ENDEREÇO COMPLETO", data.endereco], ["DATA DE NASCIMENTO", dateBR(data.nascimento)],
       ["CPF", formatCPF(data.cpf)], ["CELULAR", formatPhone(data.celular)],
