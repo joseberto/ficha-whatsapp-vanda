@@ -1,7 +1,6 @@
 (() => {
   "use strict";
 
-  const CENTRAL_PHONE = "5585920013309";
   const DEFAULT_REFERRER = "Vanda Silva";
   const params = new URLSearchParams(window.location.search);
   const initialReferrer = cleanName(params.get("indicado_por")) || DEFAULT_REFERRER;
@@ -63,24 +62,6 @@
     return `${currentBaseUrl()}?indicado_por=${encodeURIComponent(name)}`;
   }
 
-  function messageText(data) {
-    return [
-      "*FICHA DE CADASTRO*",
-      "",
-      `*Nome:* ${data.nome}`,
-      `*Nº do título:* ${data.titulo}`,
-      `*Zona:* ${data.zona}`,
-      `*Seção:* ${data.secao}`,
-      `*Endereço:* ${data.endereco}`,
-      `*Nascimento:* ${dateBR(data.nascimento)}`,
-      `*CPF:* ${formatCPF(data.cpf)}`,
-      `*Celular:* ${formatPhone(data.celular)}`,
-      `*Indicado por:* ${data.indicadoPor}`,
-      "",
-      "Autorização para cadastro, contato e relatório interno: SIM",
-    ].join("\n");
-  }
-
   function showError(message) {
     errorBox.textContent = message;
     errorBox.hidden = false;
@@ -125,12 +106,6 @@
   document.getElementById("cpf").addEventListener("input", (event) => { event.target.value = formatCPF(event.target.value); });
   document.getElementById("celular").addEventListener("input", (event) => { event.target.value = formatPhone(event.target.value); });
 
-  document.getElementById("send-whatsapp").addEventListener("click", () => {
-    if (!registration) return;
-    const url = `https://wa.me/${CENTRAL_PHONE}?text=${encodeURIComponent(messageText(registration))}`;
-    window.location.href = url;
-  });
-
   document.getElementById("share-referral").addEventListener("click", async () => {
     if (!registration) return;
     const link = referralLink(registration.nome);
@@ -157,49 +132,126 @@
     return y + (lines + 1) * lineHeight;
   }
 
+  function roundedRect(ctx, x, y, width, height, radius, fill, stroke) {
+    const r = Math.min(radius, width / 2, height / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + width - r, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+    ctx.lineTo(x + width, y + height - r);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+    ctx.lineTo(x + r, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+    if (fill) ctx.fill();
+    if (stroke) ctx.stroke();
+  }
+
+  function drawField(ctx, label, value, x, y, width, height, maxLines = 2) {
+    ctx.fillStyle = "#f8fafc";
+    ctx.strokeStyle = "#c9d5e2";
+    ctx.lineWidth = 2;
+    roundedRect(ctx, x, y, width, height, 16, true, true);
+    ctx.fillStyle = "#52667b";
+    ctx.font = "bold 20px Arial";
+    ctx.fillText(label.toUpperCase(), x + 22, y + 32);
+    ctx.fillStyle = "#17212b";
+    ctx.font = "30px Arial";
+    wrapText(ctx, value, x + 22, y + 72, width - 44, 36, maxLines);
+  }
+
   function drawImage(data) {
     const canvas = document.getElementById("card-canvas");
     const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = "#eaf1f7";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#123b68";
-    ctx.fillRect(0, 0, canvas.width, 180);
+
     ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 56px Arial";
+    roundedRect(ctx, 36, 36, 1008, 1278, 28, true, false);
+
+    ctx.fillStyle = "#123b68";
+    roundedRect(ctx, 36, 36, 1008, 178, 28, true, false);
+    ctx.fillRect(36, 150, 1008, 64);
+
+    ctx.fillStyle = "#ffffff";
+    roundedRect(ctx, 72, 75, 92, 92, 22, true, false);
+    ctx.fillStyle = "#123b68";
+    ctx.font = "bold 54px Arial";
     ctx.textAlign = "center";
-    ctx.fillText("FICHA DE CADASTRO", 540, 110);
+    ctx.fillText("V", 118, 140);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 48px Arial";
+    ctx.fillText("FICHA DE CADASTRO", 590, 115);
+    ctx.font = "22px Arial";
+    ctx.fillText("CADASTRO CENTRAL • VANDA SILVA", 590, 158);
     ctx.textAlign = "left";
 
-    const fields = [
-      ["INDICADO POR", data.indicadoPor], ["NOME COMPLETO", data.nome],
-      ["Nº DO TÍTULO", data.titulo], ["ZONA / SEÇÃO", `${data.zona} / ${data.secao}`],
-      ["ENDEREÇO COMPLETO", data.endereco], ["DATA DE NASCIMENTO", dateBR(data.nascimento)],
-      ["CPF", formatCPF(data.cpf)], ["CELULAR", formatPhone(data.celular)],
-    ];
-    let y = 235;
-    for (const [label, value] of fields) {
-      ctx.fillStyle = "#123b68";
-      ctx.font = "bold 24px Arial";
-      ctx.fillText(label, 70, y);
-      ctx.fillStyle = "#202a34";
-      ctx.font = "32px Arial";
-      y = wrapText(ctx, value, 70, y + 43, 940, 42, label === "ENDEREÇO COMPLETO" ? 3 : 2) + 36;
-      ctx.strokeStyle = "#c6d2de";
-      ctx.beginPath(); ctx.moveTo(70, y - 14); ctx.lineTo(1010, y - 14); ctx.stroke();
-    }
-    ctx.fillStyle = "#66717d";
-    ctx.font = "20px Arial";
-    wrapText(ctx, "Cadastro enviado pelo WhatsApp com autorização para uso em cadastro, contato e relatório interno.", 70, 1280, 940, 28, 2);
+    drawField(ctx, "Indicado por", data.indicadoPor, 72, 246, 936, 112);
+    drawField(ctx, "Nome completo", data.nome, 72, 382, 936, 126);
+    drawField(ctx, "Nº do título", data.titulo, 72, 532, 500, 112);
+    drawField(ctx, "Zona", data.zona, 596, 532, 190, 112);
+    drawField(ctx, "Seção", data.secao, 810, 532, 198, 112);
+    drawField(ctx, "Endereço completo", data.endereco, 72, 668, 936, 166, 3);
+    drawField(ctx, "Data de nascimento", dateBR(data.nascimento), 72, 858, 450, 112);
+    drawField(ctx, "CPF", formatCPF(data.cpf), 546, 858, 462, 112);
+    drawField(ctx, "Nº celular", formatPhone(data.celular), 72, 994, 936, 112);
+
+    ctx.strokeStyle = "#d5dee8";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(72, 1152);
+    ctx.lineTo(1008, 1152);
+    ctx.stroke();
+    ctx.fillStyle = "#123b68";
+    ctx.font = "bold 24px Arial";
+    ctx.fillText("RECEBIMENTO CENTRAL", 72, 1200);
+    ctx.fillStyle = "#52667b";
+    ctx.font = "26px Arial";
+    ctx.fillText("Vanda Silva • WhatsApp: (85) 92001-3309", 72, 1242);
     return canvas;
   }
+
+  function imageFilename(data) {
+    return `ficha-${data.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}.png`;
+  }
+
+  function canvasBlob(canvas) {
+    return new Promise((resolve) => canvas.toBlob(resolve, "image/png", 1));
+  }
+
+  function downloadCanvas(canvas, data) {
+    const link = document.createElement("a");
+    link.download = imageFilename(data);
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  }
+
+  document.getElementById("send-whatsapp").addEventListener("click", async () => {
+    if (!registration) return;
+    const canvas = drawImage(registration);
+    const blob = await canvasBlob(canvas);
+    const file = new File([blob], imageFilename(registration), { type: "image/png" });
+
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ title: "Ficha de Cadastro", files: [file] });
+        return;
+      } catch (error) {
+        if (error.name === "AbortError") return;
+      }
+    }
+
+    downloadCanvas(canvas, registration);
+    alert("A ficha foi baixada como imagem. Abra o WhatsApp da Vanda e anexe essa imagem.");
+  });
 
   document.getElementById("download-image").addEventListener("click", () => {
     if (!registration) return;
     const canvas = drawImage(registration);
-    const link = document.createElement("a");
-    link.download = `ficha-${registration.nome.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+    downloadCanvas(canvas, registration);
   });
 
   document.getElementById("edit-form").addEventListener("click", () => {
