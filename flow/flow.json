@@ -1,0 +1,125 @@
+{
+  "version": "7.1",
+  "data_api_version": "3.0",
+  "routing_model": {
+    "CADASTRO": []
+  },
+  "screens": [
+    {
+      "id": "CADASTRO",
+      "title": "Ficha de cadastro",
+      "terminal": true,
+      "success": true,
+      "data": {
+        "indicado_por": {
+          "type": "string",
+          "__example__": "Vanda Silva"
+        },
+        "referral_code": {
+          "type": "string",
+          "__example__": "VANDA"
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "ficha",
+            "children": [
+              {
+                "type": "TextHeading",
+                "text": "FICHA DE CADASTRO"
+              },
+              {
+                "type": "TextBody",
+                "text": "Indicado por: ${data.indicado_por}"
+              },
+              {
+                "type": "TextInput",
+                "name": "nome",
+                "label": "Nome completo",
+                "input-type": "text",
+                "required": true
+              },
+              {
+                "type": "TextInput",
+                "name": "titulo",
+                "label": "Nº do título",
+                "input-type": "text",
+                "required": true
+              },
+              {
+                "type": "TextInput",
+                "name": "zona",
+                "label": "Zona",
+                "input-type": "text",
+                "required": true
+              },
+              {
+                "type": "TextInput",
+                "name": "secao",
+                "label": "Seção",
+                "input-type": "text",
+                "required": true
+              },
+              {
+                "type": "TextArea",
+                "name": "endereco",
+                "label": "Endereço completo",
+                "required": true
+              },
+              {
+                "type": "DatePicker",
+                "name": "nascimento",
+                "label": "Data de nascimento",
+                "required": true
+              },
+              {
+                "type": "TextInput",
+                "name": "cpf",
+                "label": "CPF",
+                "input-type": "text",
+                "helper-text": "Digite os 11 números",
+                "required": true
+              },
+              {
+                "type": "TextInput",
+                "name": "celular",
+                "label": "Nº celular com DDD",
+                "input-type": "phone",
+                "required": true
+              },
+              {
+                "type": "OptIn",
+                "name": "consentimento",
+                "label": "Autorizo o uso destes dados para cadastro, contato e relatórios internos.",
+                "required": true
+              },
+              {
+                "type": "Footer",
+                "label": "ENVIAR FICHA",
+                "on-click-action": {
+                  "name": "complete",
+                  "payload": {
+                    "nome": "${form.nome}",
+                    "titulo": "${form.titulo}",
+                    "zona": "${form.zona}",
+                    "secao": "${form.secao}",
+                    "endereco": "${form.endereco}",
+                    "nascimento": "${form.nascimento}",
+                    "cpf": "${form.cpf}",
+                    "celular": "${form.celular}",
+                    "consentimento": "${form.consentimento}",
+                    "referral_code": "${data.referral_code}",
+                    "indicado_por": "${data.indicado_por}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

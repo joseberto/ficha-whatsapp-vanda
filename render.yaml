@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: ficha-whatsapp-vanda
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    disk:
+      name: ficha-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: GRAPH_API_VERSION
+        value: v25.0
+      - key: CENTRAL_PHONE
+        value: "5585920013309"
+      - key: CENTRAL_NAME
+        value: Vanda Silva
+      - key: CENTRAL_REF_CODE
+        value: VANDA
+      - key: DATABASE_PATH
+        value: /data/cadastros.db
+      - key: PDF_DIRECTORY
+        value: /data/pdfs
+      - key: WHATSAPP_TOKEN
+        sync: false
+      - key: PHONE_NUMBER_ID
+        sync: false
+      - key: WABA_ID
+        sync: false
+      - key: FLOW_ID
+        sync: false
+      - key: META_APP_SECRET
+        sync: false
+      - key: WEBHOOK_VERIFY_TOKEN
+        sync: false

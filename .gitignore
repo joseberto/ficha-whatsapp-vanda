@@ -1,0 +1,29 @@
+# Segredos e configuracoes locais
+.env
+.env.*
+!.env.example
+
+# Ambientes e caches Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Dados locais e arquivos com informacoes pessoais
+data/
+*.db
+*.sqlite
+*.sqlite3
+output/*.csv
+output/pdf/*
+!output/pdf/ficha_cadastro_modelo.pdf
+
+# Arquivos locais de IDE e sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
